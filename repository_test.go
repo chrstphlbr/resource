@@ -1,13 +1,13 @@
 package ressource
 
 import (
-	"fmt"
 	"github.com/chrstphlbr/testHelpers"
+	"os"
 	"testing"
 )
 
 const (
-	filesDirectory = "../files"
+	filesDirectory = "./temp"
 	greetingJson   = `{
 		"hello": {
 			"en": "hello",
@@ -15,14 +15,24 @@ const (
 			"ru": "Привет"
 		}
 	}`
+	greetingFileName = "./temp/greeting.json"
 )
 
-func TestFileRessourceRepositoryUpdate(t *testing.T) {
-	fileName := fmt.Sprintf("%s/%s", filesDirectory, "greeting.json")
+func setUp(t *testing.T) {
+	// create repository
+	os.Mkdir(filesDirectory, 0700)
 	// create file
-	testHelpers.CreateFile(t, fileName, greetingJson)
+	testHelpers.CreateFile(t, greetingFileName, greetingJson)
+}
+
+func tearDown(t *testing.T) {
 	// delete file
-	defer testHelpers.RemoveFile(t, fileName)
+	testHelpers.RemoveFile(t, filesDirectory)
+}
+
+func TestFileRessourceRepositoryUpdate(t *testing.T) {
+	setUp(t)
+	defer tearDown(t)
 
 	repo := NewFileRepository(filesDirectory)
 	// should update ressources to one RessourceAdapter
