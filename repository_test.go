@@ -1,4 +1,4 @@
-package ressource
+package resource
 
 import (
 	"github.com/chrstphlbr/testHelpers"
@@ -30,16 +30,16 @@ func tearDown(t *testing.T) {
 	testHelpers.RemoveFile(t, filesDirectory)
 }
 
-func TestFileRessourceRepositoryUpdate(t *testing.T) {
+func TestFileResourceRepositoryUpdate(t *testing.T) {
 	setUp(t)
 	defer tearDown(t)
 
 	repo := NewFileRepository(filesDirectory)
-	// should update ressources to one RessourceAdapter
+	// should update resources to one ResourceAdapter
 	repo.Update()
-	size := len(repo.ressources)
+	size := len(repo.Resources())
 	if size != 1 {
 		// not correct size, should be 1
-		t.Fatalf("ressource size should be 1 but was actually %d\n", size)
+		t.Fatalf("resource size should be 1 but was actually %d\n", size)
 	}
 }

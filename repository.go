@@ -1,4 +1,4 @@
-package ressource
+package resource
 
 import (
 	"fmt"
@@ -10,18 +10,18 @@ import (
 
 type Repository interface {
 	Update()
-	Ressources() []Adapter
+	Resources() []Adapter
 }
 
 type FileRepository struct {
-	sync.Mutex
-	ressources []Adapter
-	path       string
+	lock      sync.Mutex
+	resources []Adapter
+	path      string
 }
 
 func (repo *FileRepository) Update() {
-	repo.Lock()
-	defer repo.Unlock()
+	repo.lock.Lock()
+	defer repo.lock.Unlock()
 	log.Println("start update")
 	fileDescriptors, err := ioutil.ReadDir(repo.path)
 	if err != nil {
@@ -30,8 +30,8 @@ func (repo *FileRepository) Update() {
 		return
 	}
 	log.Printf("directories has %d files", len(fileDescriptors))
-	// dirty implementation: remove all previous ressources and add all again
-	repo.ressources = make([]Adapter, 0, len(fileDescriptors))
+	// dirty implementation: remove all previous resources and add all again
+	repo.resources = make([]Adapter, 0, len(fileDescriptors))
 	var pathToFile string
 	for _, fd := range fileDescriptors {
 		if fd.IsDir() {
@@ -45,16 +45,16 @@ func (repo *FileRepository) Update() {
 		}
 		pathToFile = fmt.Sprintf("%s/%s", repo.path, fd.Name())
 		//log.Println(pathToFile)
-		// add RessourceAsapter to ressources
-		repo.ressources = append(repo.ressources, NewFileAdapter(pathToFile))
+		// add RessourceAsapter to resources
+		repo.resources = append(repo.resources, NewFileAdapter(pathToFile))
 	}
 	log.Println("finished update")
 }
 
-func (repo FileRepository) Ressources() []Adapter {
-	repo.Lock()
-	defer repo.Unlock()
-	return repo.ressources
+func (repo FileRepository) Resources() []Adapter {
+	repo.lock.Lock()
+	defer repo.lock.Unlock()
+	return repo.resources
 }
 
 func NewFileRepository(path string) *FileRepository {
