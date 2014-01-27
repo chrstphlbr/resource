@@ -1,4 +1,4 @@
-package ressource
+package resource
 
 import (
 	"io"

@@ -1,4 +1,4 @@
-package ressource
+package resource
 
 import (
 	"fmt"
@@ -14,14 +14,14 @@ type Repository interface {
 }
 
 type FileRepository struct {
-	sync.Mutex
+	lock       sync.Mutex
 	ressources []Adapter
 	path       string
 }
 
 func (repo *FileRepository) Update() {
-	repo.Lock()
-	defer repo.Unlock()
+	repo.lock.Lock()
+	defer repo.lock.Unlock()
 	log.Println("start update")
 	fileDescriptors, err := ioutil.ReadDir(repo.path)
 	if err != nil {
@@ -52,8 +52,8 @@ func (repo *FileRepository) Update() {
 }
 
 func (repo FileRepository) Ressources() []Adapter {
-	repo.Lock()
-	defer repo.Unlock()
+	repo.lock.Lock()
+	defer repo.lock.Unlock()
 	return repo.ressources
 }
 
