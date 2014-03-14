@@ -1,4 +1,4 @@
-# Resource library for golang
+# Resource library for Go
 
 This repository provides generic interfaces for dealing with repositories of resources.
 The two main components are repositories (Repository) and adapters to resources (Adapter).
